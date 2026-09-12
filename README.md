@@ -17,17 +17,15 @@ Das Projekt ist ein universeller Hochgeschwindigkeits-Programmierer und Hardware
 
 Arduino bietet zwei wählbare Pin-Belegungen (Standard und Alternative):
 
-| Signal / Funktion | Arduino Pin (Standard) | Arduino Pin (Alternativ) | ESP32-C3 Pin | Ziel-Mikrocontroller |
+| Signal / Funktion | Arduino Pin (Standard) | Arduino Pin (Alternativ) | ESP32-C3 | Ziel-Mikrocontroller |
 | --- | --- | --- | --- | --- |
 | MOSI / SDI / TPIDATA | D11 | D4 | GPIO 2 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
-| MISO / SDO | D12 | D5 | GPIO 1 | ISP: MISO / HVSP: SDO |
-| SCK / SCI / TPICLK | D13 | D6 | GPIO 3 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
-| UPDI / 5V Target Reset | D8 | D8 | GPIO 0 | UPDI: Pin 6 (über 4.7 kΩ) |
-| 12V HV Gate | D7 | D7 | GPIO 10 | An Optokoppler PC817 |
-| 12V Dickson Pump (62.5 kHz) | D9, D10 | D9, D10 | GPIO 6, GPIO 7 | An Dioden-Kondensator-Kaskade |
-| 1.0 MHz Rescue Clock | D3 | D3 | GPIO 4 | An XTAL1 des Zielchips |
-| Dedicated ISP Reset | A4 | A4 | GPIO 5 | An RESET bei klassischem ISP |
-| Target VCC Switch | A5 | A5 | GPIO 8 | An Basis des PNP-Transistors |
+| MISO / SDO | D12 | D5 | GPIO 5 | ISP: MISO / HVSP: SDO |
+| SCK / SCI / TPICLK | D13 | D6 | GPIO 4 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
+| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (über 4.7 kΩ) |
+| 12V HV Gate | D7 | D7 | GPIO 1 | An Optokoppler PC817 |
+| 1.0 MHz Rescue Clock | D3 | D3 | GPIO 3 | An XTAL1 des Zielchips |
+| Target VCC Switch | A5 | A5 | GPIO 0 | An Basis des PNP-Transistors |
 | Versorgung | +5V / GND | +5V / GND | +5V / GND | VCC und GND des Zielchips |
 
 > Die Umschaltung zwischen Standard (D11–D13) und Alternative (D4–D6) erfolgt live im Programm-Interface und wird hardwareseitig sofort umgeschaltet.
@@ -79,14 +77,12 @@ Arduino bietet zwei wählbare Pin-Belegungen (Standard und Alternative):
 | Сигнал / Функція | Вивід Arduino (Стандарт) | Вивід Arduino (Альтернатива) | ESP32-C3 | Цільовий мікроконтролер |
 | --- | --- | --- | --- | --- |
 | MOSI / SDI / TPIDATA | D11 | D4 | GPIO 2 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
-| MISO / SDO | D12 | D5 | GPIO 1 | ISP: MISO / HVSP: SDO |
-| SCK / SCI / TPICLK | D13 | D6 | GPIO 3 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
-| UPDI / 5V Target Reset | D8 | D8 | GPIO 0 | UPDI: Pin 6 (через 4.7 кОм) |
-| 12V HV Gate | D7 | D7 | GPIO 10 | На оптопару PC817 |
-| 12V Dickson Pump (62.5 кГц) | D9, D10 | D9, D10 | GPIO 6, GPIO 7 | До каскаду конденсаторів та діодів |
-| 1.0 МГц Rescue Clock | D3 | D3 | GPIO 4 | До виводу XTAL1 чипа |
-| Dedicated ISP Reset | A4 | A4 | GPIO 5 | До RESET при звичайному ISP |
-| Target VCC Switch | A5 | A5 | GPIO 8 | До бази PNP-транзистора |
+| MISO / SDO | D12 | D5 | GPIO 5 | ISP: MISO / HVSP: SDO |
+| SCK / SCI / TPICLK | D13 | D6 | GPIO 4 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
+| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (через 4.7 кОм) |
+| 12V HV Gate | D7 | D7 | GPIO 1 | На оптопару PC817 |
+| 1.0 МГц Rescue Clock | D3 | D3 | GPIO 3 | До виводу XTAL1 чипа |
+| Target VCC Switch | A5 | A5 | GPIO 0 | До бази PNP-транзистора |
 | Живлення | +5V / GND | +5V / GND | +5V / GND | VCC та GND цільового чипа |
 
 ### Основні можливості
@@ -136,14 +132,12 @@ The project is a high-speed universal programmer and hardware unbricker for Atme
 | Signal / Function | Arduino Pin (Standard) | Arduino Pin (Alternate) | ESP32-C3 | Target Microcontroller |
 | --- | --- | --- | --- | --- |
 | MOSI / SDI / TPIDATA | D11 | D4 | GPIO 2 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
-| MISO / SDO | D12 | D5 | GPIO 1 | ISP: MISO / HVSP: SDO |
-| SCK / SCI / TPICLK | D13 | D6 | GPIO 3 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
-| UPDI / 5V Target Reset | D8 | D8 | GPIO 0 | UPDI: Pin 6 (via 4.7 kΩ) |
-| 12V HV Gate | D7 | D7 | GPIO 10 | To PC817 optocoupler |
-| 12V Dickson Pump (62.5 kHz) | D9, D10 | D9, D10 | GPIO 6, GPIO 7 | To diode-capacitor multiplier ladder |
-| 1.0 MHz Rescue Clock | D3 | D3 | GPIO 4 | To XTAL1 of target MCU |
-| Dedicated ISP Reset | A4 | A4 | GPIO 5 | To RESET for classic ISP |
-| Target VCC Switch | A5 | A5 | GPIO 8 | To base of PNP power switch |
+| MISO / SDO | D12 | D5 | GPIO 5 | ISP: MISO / HVSP: SDO |
+| SCK / SCI / TPICLK | D13 | D6 | GPIO 4 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
+| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (via 4.7 kΩ) |
+| 12V HV Gate | D7 | D7 | GPIO 1 | To PC817 optocoupler |
+| 1.0 MHz Rescue Clock | D3 | D3 | GPIO 3 | To XTAL1 of target MCU |
+| Target VCC Switch | A5 | A5 | GPIO 0 | To base of PNP power switch |
 | Power | +5V / GND | +5V / GND | +5V / GND | Target MCU VCC & GND |
 
 ### Key features
@@ -193,14 +187,12 @@ The project is a high-speed universal programmer and hardware unbricker for Atme
 | Сигнал / Функция | Вывод Arduino (Стандарт) | Вывод Arduino (Альтернатива) | ESP32-C3 | Целевой микроконтроллер |
 | --- | --- | --- | --- | --- |
 | MOSI / SDI / TPIDATA | D11 | D4 | GPIO 2 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
-| MISO / SDO | D12 | D5 | GPIO 1 | ISP: MISO / HVSP: SDO |
-| SCK / SCI / TPICLK | D13 | D6 | GPIO 3 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
-| UPDI / 5V Target Reset | D8 | D8 | GPIO 0 | UPDI: Pin 6 (через 4.7 кОм) |
-| 12V HV Gate | D7 | D7 | GPIO 10 | На оптопару PC817 |
-| 12V Dickson Pump (62.5 кГц) | D9, D10 | D9, D10 | GPIO 6, GPIO 7 | К диодно-конденсаторному умножителю |
-| 1.0 МГц Rescue Clock | D3 | D3 | GPIO 4 | К ножке XTAL1 чипа |
-| Dedicated ISP Reset | A4 | A4 | GPIO 5 | К ножке RESET при классическом ISP |
-| Target VCC Switch | A5 | A5 | GPIO 8 | К базе PNP-транзистора питания |
+| MISO / SDO | D12 | D5 | GPIO 5 | ISP: MISO / HVSP: SDO |
+| SCK / SCI / TPICLK | D13 | D6 | GPIO 4 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
+| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (через 4.7 кОм) |
+| 12V HV Gate | D7 | D7 | GPIO 1 | На оптопару PC817 |
+| 1.0 МГц Rescue Clock | D3 | D3 | GPIO 3 | К ножке XTAL1 чипа |
+| Target VCC Switch | A5 | A5 | GPIO 0 | К базе PNP-транзистора питания |
 | Питание | +5V / GND | +5V / GND | +5V / GND | VCC и GND целевого чипа |
 
 ### Основные возможности
