@@ -214,11 +214,18 @@ The project is a high-speed universal programmer and hardware unbricker for Atme
 - **Classic ISP (5В):** ATmega8, 16, 32, 48, 88, 168, 328P, ATtiny24, 44, 84, 2313 и др. (с подачей частоты на XTAL1).
 - **HVSP (12В HV):** ATtiny13, ATtiny25, ATtiny45, ATtiny85 (реанимация при отключенном RESET).
 
-### Использование
+### Программатор-Хамелеон (Chameleon Multi-Protocol)
 
-1. Подключите Arduino UNO / Nano или ESP32-C3 к компьютеру по USB.
-2. Запустите `ATtinyProger.exe`. При необходимости нажмите `⚡ Flash Arduino` (для Arduino UNO/Nano).
-3. Выберите в панели COM-порт или нажмите `Detect IC` для автоопределения подключенного МК.
-4. Подключите целевой чип согласно схеме.
-5. Проверьте фьюзы, откройте `.hex`-файл и нажмите `Write Flash` или `Chip Erase`.
+Прошивка программатора автоматически адаптируется под протокол и задачи внешней среды без перепрошивки устройства:
+1. **Режим `jtag2updi` (JTAGICE mkII)**:
+   - Автоматически активируется при обращении `avrdude -c jtag2updi` или Arduino IDE (ядра `megaTinyCore`, `MegaCoreX`, `DxCore`).
+   - Используется для всех современных чипов с шиной **UPDI** (tinyAVR 0/1/2, megaAVR 0-series, AVR-DA/DB/DD).
+   - Пример: `avrdude -c jtag2updi -p t412 -P COM4 -b 115200 -U flash:w:firmware.hex:i`
+2. **Режим `stk500v1` (Arduino as ISP / AVRISP)**:
+   - Автоматически активируется при обращении `avrdude -c stk500v1` или Arduino IDE (меню *Инструменты -> Программатор -> "Arduino as ISP"*).
+   - Используется для всех классических чипов с шиной **ISP / SPI** (`ATtiny13A`, `ATtiny25/45/85`, `ATtiny24/44/84`, `ATmega8`, `ATmega16/32`, `ATmega328P` и др.).
+   - Пример: `avrdude -c stk500v1 -p t13a -P COM4 -b 115200 -U flash:w:charger.hex:i`
+3. **Режим `Native Engine` (родной GUI ATtinyProger)**:
+   - Полный доступ ко всем высоковольтным 12В функциям (разблокировка RSTDISBL, сброс фьюзов по умолчанию, TPI для ATtiny10, битовый редактор Fuse X).
+
 
