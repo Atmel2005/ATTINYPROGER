@@ -7,9 +7,9 @@ Das Projekt ist ein universeller Hochgeschwindigkeits-Programmierer und Hardware
 ### Ausrüstung & Hardware
 
 - **Arduino UNO oder Nano (ATmega328P)** oder **ESP32-C3 High-Speed Programmer** (mit nativem USB-JTAG, integriertem Wi-Fi Web-Interface und Hardware-Beschleunigung)
-- Optokoppler PC817 + Diode 1N4148 (12V HV-Impulstor)
+- Optokoppler PC817 + Diode 1N5819 (12V HV-Impulstor)
 - 4× 100 nF Kondensatoren + 4× 1N4148 Dioden (integrierte Dickson-12V-Ladungspumpe)
-- 1× 4.7 kΩ Widerstand (UPDI-Strombegrenzung), 1× 330 Ω (PC817 Vorwiderstand)
+- Widerstand (UPDI-Strombegrenzung), Widerstand (PC817 Vorwiderstand)
 - 1× PNP-Transistor (Target VCC Ein-/Ausschaltung)
 - Ziel-Mikrocontroller (ATtiny, ATmega)
 
@@ -19,13 +19,14 @@ Arduino bietet zwei wählbare Pin-Belegungen (Standard und Alternative):
 
 | Signal / Funktion | Arduino Pin (Standard) | Arduino Pin (Alternativ) | ESP32-C3 | Ziel-Mikrocontroller |
 | --- | --- | --- | --- | --- |
-| MOSI / SDI / TPIDATA | D11 | D4 | GPIO 2 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
-| MISO / SDO | D12 | D5 | GPIO 5 | ISP: MISO / HVSP: SDO |
-| SCK / SCI / TPICLK | D13 | D6 | GPIO 4 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
-| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (über 4.7 kΩ) |
-| 12V HV Gate | D7 | D7 | GPIO 1 | An Optokoppler PC817 |
-| 1.0 MHz Rescue Clock | D3 | D3 | GPIO 3 | An XTAL1 des Zielchips |
-| Target VCC Switch | A5 | A5 | GPIO 0 | An Basis des PNP-Transistors |
+| MOSI / SDI / TPIDATA | D11 | D4 | GPIO 21 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
+| MISO / SDO | D12 | D5 | GPIO 10 | ISP: MISO / HVSP: SDO |
+| SII (Zusatz für ISP) | - | - | GPIO 6 | ISP: Variiert |
+| SCK / SCI / TPICLK | D13 | D6 | GPIO 7 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
+| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (über Widerstand) |
+| 12V HV Gate | D7 | D7 | - | An Optokoppler PC817 |
+| 1.0 MHz Rescue Clock | D3 | D3 | - | An XTAL1 des Zielchips |
+| Target VCC Switch | A5 | A5 | - | An Basis des PNP-Transistors |
 | Versorgung | +5V / GND | +5V / GND | +5V / GND | VCC und GND des Zielchips |
 
 > Die Umschaltung zwischen Standard (D11–D13) und Alternative (D4–D6) erfolgt live im Programm-Interface und wird hardwareseitig sofort umgeschaltet.
@@ -45,9 +46,17 @@ Arduino bietet zwei wählbare Pin-Belegungen (Standard und Alternative):
 ### Unterstützte Chips und Modi
 
 - **TPI (5V & 12V HV):** ATtiny4, ATtiny5, ATtiny9, ATtiny10, ATtiny20, ATtiny40 (inklusive Entsperrung von `RSTDISBL`).
-- **UPDI (5V & 12V HV):** tinyAVR 0/1/2-Serie (ATtiny202, 402, 412, 814, 1614, 3216 usw.) mit Reaktivierung als GPIO konfigurierter Pins.
+- **UPDI (5V & 12V HV):** Unterstützung für **über 40+ Chips** der tinyAVR 0/1/2- und megaAVR-Serien (ATtiny202, 402, 412, 814, 1614, 3216 usw.) mit Reaktivierung als GPIO konfigurierter Pins.
 - **Classic ISP (5V):** ATmega8, 16, 32, 48, 88, 168, 328P, ATtiny24, 44, 84, 2313 usw. (mit Rescue Clock an XTAL1).
 - **HVSP (12V HV):** ATtiny13, ATtiny25, ATtiny45, ATtiny85 (Rettung bei deaktiviertem RESET).
+
+
+### Chameleon-Programmierer (Chameleon Multi-Protocol)
+
+Die Firmware passt sich automatisch dem Protokoll an (für Arduino UNO/Nano):
+1. **Modus `jtag2updi` (JTAGICE mkII)**: Wird automatisch für UPDI-Chips bei Verwendung von Arduino IDE oder AVRDUDE aktiviert. Kompatibel mit `megaTinyCore`, `MegaCoreX`, `DxCore`.
+2. **Modus `stk500v1` (Arduino as ISP)**: Wird automatisch für SPI/ISP-Chips (ATmega, klassische ATtiny) aktiviert. Kompatibel mit Standard-Arduino-IDE-Profilen.
+3. **Modus `Native Engine`**: Nutzt die volle 12V-HV-Funktionalität der ATtinyProger-Oberfläche.
 
 ### Nutzung
 
@@ -66,9 +75,9 @@ Arduino bietet zwei wählbare Pin-Belegungen (Standard und Alternative):
 ### Обладнання
 
 - **Arduino UNO або Nano (ATmega328P)** або **ESP32-C3** (USB-JTAG CDC, автономний Wi-Fi Web-інтерфейс)
-- Оптопара PC817 + діод 1N4148 (комутація імпульсу 12В)
+- Оптопара PC817 + діод 1N5819 (комутація імпульсу 12В)
 - 4× конденсатори 100 нФ + 4× діоди 1N4148 (вбудований помножувач Діксона 12В)
-- 1× резистор 4.7 кОм (захист лінії UPDI), 1× 330 Ом (струмообмежувач PC817)
+- резистор (захист лінії UPDI), резистор (струмообмежувач PC817)
 - 1× PNP-транзистор (комутація живлення Target VCC)
 - Цільовий мікроконтролер (ATtiny, ATmega)
 
@@ -76,13 +85,14 @@ Arduino bietet zwei wählbare Pin-Belegungen (Standard und Alternative):
 
 | Сигнал / Функція | Вивід Arduino (Стандарт) | Вивід Arduino (Альтернатива) | ESP32-C3 | Цільовий мікроконтролер |
 | --- | --- | --- | --- | --- |
-| MOSI / SDI / TPIDATA | D11 | D4 | GPIO 2 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
-| MISO / SDO | D12 | D5 | GPIO 5 | ISP: MISO / HVSP: SDO |
-| SCK / SCI / TPICLK | D13 | D6 | GPIO 4 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
-| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (через 4.7 кОм) |
-| 12V HV Gate | D7 | D7 | GPIO 1 | На оптопару PC817 |
-| 1.0 МГц Rescue Clock | D3 | D3 | GPIO 3 | До виводу XTAL1 чипа |
-| Target VCC Switch | A5 | A5 | GPIO 0 | До бази PNP-транзистора |
+| MOSI / SDI / TPIDATA | D11 | D4 | GPIO 21 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
+| MISO / SDO | D12 | D5 | GPIO 10 | ISP: MISO / HVSP: SDO |
+| SII (додат. для ISP) | - | - | GPIO 6 | ISP: Різні піни |
+| SCK / SCI / TPICLK | D13 | D6 | GPIO 7 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
+| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (через резистор) |
+| 12V HV Gate | D7 | D7 | - | На оптопару PC817 |
+| 1.0 МГц Rescue Clock | D3 | D3 | - | До виводу XTAL1 чипа |
+| Target VCC Switch | A5 | A5 | - | До бази PNP-транзистора |
 | Живлення | +5V / GND | +5V / GND | +5V / GND | VCC та GND цільового чипа |
 
 ### Основні можливості
@@ -100,9 +110,17 @@ Arduino bietet zwei wählbare Pin-Belegungen (Standard und Alternative):
 ### Підтримувані чипи та режими
 
 - **TPI (5В та 12В HV):** ATtiny4, ATtiny5, ATtiny9, ATtiny10, ATtiny20, ATtiny40 (включно з розблокуванням `RSTDISBL`).
-- **UPDI (5В та 12В HV):** серія tinyAVR 0/1/2 (ATtiny202, 402, 412, 814, 1614, 3216 тощо) з відновленням режиму UPDI при налаштуванні піна як GPIO.
+- **UPDI (5В та 12В HV):** підтримка **понад 40+ чипів** серій tinyAVR 0/1/2 та megaAVR (ATtiny202, 402, 412, 814, 1614, 3216 тощо) з відновленням режиму UPDI при налаштуванні піна як GPIO.
 - **Classic ISP (5В):** ATmega8, 16, 32, 48, 88, 168, 328P, ATtiny24, 44, 84, 2313 тощо (з подачею тактового сигналу на XTAL1).
 - **HVSP (12В HV):** ATtiny13, ATtiny25, ATtiny45, ATtiny85 (відновлення заводських налаштувань при відключеному RESET).
+
+
+### Програматор-Хамелеон (Chameleon Multi-Protocol)
+
+Прошивка автоматично адаптується під протокол (для Arduino UNO/Nano):
+1. **Режим `jtag2updi` (JTAGICE mkII)**: Автоматично активується для UPDI-чипів при роботі з Arduino IDE або AVRDUDE. Сумісний з `megaTinyCore`, `MegaCoreX`, `DxCore`.
+2. **Режим `stk500v1` (Arduino as ISP)**: Автоматично активується для класичних ISP/SPI-чипів (ATmega, ATtiny). Сумісний зі стандартними профілями Arduino IDE.
+3. **Режим `Native Engine`**: Використовує всю 12В HV-функціональність рідної програми ATtinyProger.
 
 ### Використання
 
@@ -121,9 +139,9 @@ The project is a high-speed universal programmer and hardware unbricker for Atme
 ### Hardware
 
 - **Arduino UNO or Nano (ATmega328P)** or **ESP32-C3** (USB-JTAG CDC, high-speed burst engine, Wi-Fi Web UI)
-- Optocoupler PC817 + 1N4148 diode (12V HV pulse gate)
+- Optocoupler PC817 + 1N5819 diode (12V HV pulse gate)
 - 4× 100 nF capacitors + 4× 1N4148 diodes (onboard Dickson 12V charge pump)
-- 1× 4.7 kΩ resistor (UPDI current limiting), 1× 330 Ω (PC817 base resistor)
+- resistor (UPDI current limiting), Widerstand (PC817 base resistor)
 - 1× PNP transistor (Target VCC power switching)
 - Target microcontroller (ATtiny, ATmega)
 
@@ -131,13 +149,14 @@ The project is a high-speed universal programmer and hardware unbricker for Atme
 
 | Signal / Function | Arduino Pin (Standard) | Arduino Pin (Alternate) | ESP32-C3 | Target Microcontroller |
 | --- | --- | --- | --- | --- |
-| MOSI / SDI / TPIDATA | D11 | D4 | GPIO 2 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
-| MISO / SDO | D12 | D5 | GPIO 5 | ISP: MISO / HVSP: SDO |
-| SCK / SCI / TPICLK | D13 | D6 | GPIO 4 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
-| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (via 4.7 kΩ) |
-| 12V HV Gate | D7 | D7 | GPIO 1 | To PC817 optocoupler |
-| 1.0 MHz Rescue Clock | D3 | D3 | GPIO 3 | To XTAL1 of target MCU |
-| Target VCC Switch | A5 | A5 | GPIO 0 | To base of PNP power switch |
+| MOSI / SDI / TPIDATA | D11 | D4 | GPIO 21 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
+| MISO / SDO | D12 | D5 | GPIO 10 | ISP: MISO / HVSP: SDO |
+| SII (extra for ISP) | - | - | GPIO 6 | ISP: Varies |
+| SCK / SCI / TPICLK | D13 | D6 | GPIO 7 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
+| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (via resistor) |
+| 12V HV Gate | D7 | D7 | - | To PC817 optocoupler |
+| 1.0 MHz Rescue Clock | D3 | D3 | - | To XTAL1 of target MCU |
+| Target VCC Switch | A5 | A5 | - | To base of PNP power switch |
 | Power | +5V / GND | +5V / GND | +5V / GND | Target MCU VCC & GND |
 
 ### Key features
@@ -155,9 +174,17 @@ The project is a high-speed universal programmer and hardware unbricker for Atme
 ### Supported Chips and Modes
 
 - **TPI (5V & 12V HV):** ATtiny4, ATtiny5, ATtiny9, ATtiny10, ATtiny20, ATtiny40 (including `RSTDISBL` recovery).
-- **UPDI (5V & 12V HV):** tinyAVR 0/1/2 series (ATtiny202, 402, 412, 814, 1614, 3216, etc.) with HV override when pin is set as GPIO.
+- **UPDI (5V & 12V HV):** Support for **over 40+ chips** in the tinyAVR 0/1/2 and megaAVR series (ATtiny202, 402, 412, 814, 1614, 3216, etc.) with HV override when pin is set as GPIO.
 - **Classic ISP (5V):** ATmega8, 16, 32, 48, 88, 168, 328P, ATtiny24, 44, 84, 2313, etc. (with Rescue Clock on XTAL1).
 - **HVSP (12V HV):** ATtiny13, ATtiny25, ATtiny45, ATtiny85 (unbricking when RESET pin is disabled).
+
+
+### Chameleon Programmer (Chameleon Multi-Protocol)
+
+The firmware automatically adapts to the required protocol (for Arduino UNO/Nano):
+1. **`jtag2updi` Mode (JTAGICE mkII)**: Automatically activated for UPDI chips when using Arduino IDE or AVRDUDE. Compatible with `megaTinyCore`, `MegaCoreX`, `DxCore`.
+2. **`stk500v1` Mode (Arduino as ISP)**: Automatically activated for classic SPI/ISP chips (ATmega, classic ATtiny). Compatible with standard Arduino IDE profiles.
+3. **`Native Engine` Mode**: Utilizes the full 12V HV functionality of the ATtinyProger GUI.
 
 ### Usage
 
@@ -176,9 +203,9 @@ The project is a high-speed universal programmer and hardware unbricker for Atme
 ### Аппаратная часть
 
 - **Arduino UNO или Nano (ATmega328P)** или **ESP32-C3** (High-Speed USB-JTAG CDC, автономная Wi-Fi веб-страница управления)
-- Оптопара PC817 + диод 1N4148 (ключ высоковольтного 12В импульса)
+- Оптопара PC817 + диод 1N5819 (ключ высоковольтного 12В импульса)
 - 4× конденсатора 100 нФ + 4× диода 1N4148 (встроенный умножитель Диксона 12В)
-- 1× резистор 4.7 кОм (ограничение тока UPDI), 1× 330 Ом (базовый резистор PC817)
+- резистор (ограничение тока UPDI), резистор (базовый резистор PC817)
 - 1× PNP-транзистор (коммутация питания Target VCC)
 - Прошиваемый микроконтроллер (ATtiny, ATmega)
 
@@ -186,13 +213,14 @@ The project is a high-speed universal programmer and hardware unbricker for Atme
 
 | Сигнал / Функция | Вывод Arduino (Стандарт) | Вывод Arduino (Альтернатива) | ESP32-C3 | Целевой микроконтроллер |
 | --- | --- | --- | --- | --- |
-| MOSI / SDI / TPIDATA | D11 | D4 | GPIO 2 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
-| MISO / SDO | D12 | D5 | GPIO 5 | ISP: MISO / HVSP: SDO |
-| SCK / SCI / TPICLK | D13 | D6 | GPIO 4 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
-| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (через 4.7 кОм) |
-| 12V HV Gate | D7 | D7 | GPIO 1 | На оптопару PC817 |
-| 1.0 МГц Rescue Clock | D3 | D3 | GPIO 3 | К ножке XTAL1 чипа |
-| Target VCC Switch | A5 | A5 | GPIO 0 | К базе PNP-транзистора питания |
+| MOSI / SDI / TPIDATA | D11 | D4 | GPIO 21 | TPI: Pin 1 / ISP: MOSI / HVSP: SDI |
+| MISO / SDO | D12 | D5 | GPIO 10 | ISP: MISO / HVSP: SDO |
+| SII (доп. для ISP) | - | - | GPIO 6 | ISP: Разные пины |
+| SCK / SCI / TPICLK | D13 | D6 | GPIO 7 | TPI: Pin 3 / ISP: SCK / HVSP: SCI |
+| UPDI / 5V Target Reset | D8 | D8 | GPIO 20 | UPDI: Pin 6 (через резистор) |
+| 12V HV Gate | D7 | D7 | - | На оптопару PC817 |
+| 1.0 МГц Rescue Clock | D3 | D3 | - | К ножке XTAL1 чипа |
+| Target VCC Switch | A5 | A5 | - | К базе PNP-транзистора питания |
 | Питание | +5V / GND | +5V / GND | +5V / GND | VCC и GND целевого чипа |
 
 ### Основные возможности
@@ -210,7 +238,7 @@ The project is a high-speed universal programmer and hardware unbricker for Atme
 ### Поддерживаемые чипы и режимы
 
 - **TPI (5В и 12В HV):** ATtiny4, ATtiny5, ATtiny9, ATtiny10, ATtiny20, ATtiny40 (включая снятие блокировки `RSTDISBL`).
-- **UPDI (5В и 12В HV):** серия tinyAVR 0/1/2 (ATtiny202, 402, 412, 814, 1614, 3216 и др.) с разблокировкой ножки, настроенной как GPIO.
+- **UPDI (5В и 12В HV):** поддержка **более 40+ чипов** серий tinyAVR 0/1/2 и megaAVR (ATtiny202, 402, 412, 814, 1614, 3216 и др.) с разблокировкой ножки, настроенной как GPIO.
 - **Classic ISP (5В):** ATmega8, 16, 32, 48, 88, 168, 328P, ATtiny24, 44, 84, 2313 и др. (с подачей частоты на XTAL1).
 - **HVSP (12В HV):** ATtiny13, ATtiny25, ATtiny45, ATtiny85 (реанимация при отключенном RESET).
 
